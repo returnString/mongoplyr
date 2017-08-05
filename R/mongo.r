@@ -179,5 +179,7 @@ setMethod("execute", signature(p = "MongoPipeline"),
 	function(p, client)
 	{
 		pipeline <- paste0("[", toString(p@stages), "]")
-		jsonlite::flatten(client$aggregate(pipeline))
+		flattenedFrame <- jsonlite::flatten(client$aggregate(pipeline))
+		colnames(flattenedFrame) <- gsub("^_id", "id", colnames(flattenedFrame))
+		flattenedFrame
 	})
