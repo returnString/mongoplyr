@@ -27,9 +27,26 @@ exprParser <- function()
 			}
 			else if (is.call(x))
 			{
-				op <- deparse(x[[1]])
+				op <- visit(x[[1]])
+				opText <- deparse(x[[1]])
 				args <- lapply(x[2:length(x)], visit)
-				return(list(type = "call", op = op, args = args))
+
+				if (is.primitive(op$value) | startsWith(opText, "."))
+				{
+					opText <- sub("^\\.", "", opText)
+					return(list(type = "call", op = opText, args = args))
+				}
+				else
+				{
+					rargs <- list()
+					if (length(x) > 1)
+					{
+						rargs <- lapply(x[2:length(x)], function(i) eval(i, envir = callingFrame))
+					}
+
+					result <- do.call(op$value, rargs)
+					return(list(type = "atomic", value = result))
+				}
 			}
 			else
 			{
