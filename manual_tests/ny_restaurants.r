@@ -34,3 +34,8 @@ input <- list(cuisine = "Continental")
 MongoPipeline() %>%
 	match(.cuisine == input$cuisine) %>%
 	execute(conn) -> continentalCuisineFromInput
+
+MongoPipeline() %>%
+	unwind(.grades) %>%
+	sort(.grades.grade = 1, .grades.date = -1) %>%
+	execute(conn) -> restaurantRatingsSortedByGradeAndDate

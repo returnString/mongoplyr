@@ -199,6 +199,17 @@ setMethod("unwind", signature(p = "MongoPipeline"),
 		p
 	})
 
+#' @export
+setGeneric("sort", function(p, ...) standardGeneric("sort"))
+setMethod("sort", signature(p = "MongoPipeline"),
+	function(p, ...)
+	{
+		namedArgs <- lapply(list(...), jsonlite::unbox)
+		names(namedArgs) <- sapply(names(namedArgs), function(n) sub("^\\.", "", n))
+		p@stages <- c(p@stages, createStage("sort", namedArgs))
+		p
+	})
+
 # TODO: need to figure out how to dispatch specifically on a mongolite client
 #' @export
 setGeneric("execute", function(p, ...) standardGeneric("execute"))
