@@ -152,8 +152,8 @@ createStage <- function(name, payload)
 MongoPipeline <- setClass("MongoPipeline", slots = c(stages = "character"))
 
 #' @export
-setGeneric("match", function(p, expr) standardGeneric("match"))
-setMethod("match", signature(p = "MongoPipeline"),
+setGeneric("mmatch", function(p, expr) standardGeneric("mmatch"))
+setMethod("mmatch", signature(p = "MongoPipeline"),
 	function(p, expr)
 	{
 		parser <- exprParser()
@@ -164,8 +164,8 @@ setMethod("match", signature(p = "MongoPipeline"),
 	})
 
 #' @export
-setGeneric("limit", function(p, limit) standardGeneric("limit"))
-setMethod("limit", signature(p = "MongoPipeline", limit = "numeric"),
+setGeneric("mlimit", function(p, limit) standardGeneric("mlimit"))
+setMethod("mlimit", signature(p = "MongoPipeline", limit = "numeric"),
 	function(p, limit)
 	{
 		p@stages <- c(p@stages, createStage("limit", jsonlite::unbox(limit)))
@@ -173,8 +173,8 @@ setMethod("limit", signature(p = "MongoPipeline", limit = "numeric"),
 	})
 
 #' @export
-setGeneric("group", function(p, by, ...) standardGeneric("group"))
-setMethod("group", signature(p = "MongoPipeline"),
+setGeneric("mgroup", function(p, by, ...) standardGeneric("mgroup"))
+setMethod("mgroup", signature(p = "MongoPipeline"),
 	function(p, by, ...)
 	{
 		subbedArgs <- as.list(substitute(list(...)))[-1L]
@@ -189,8 +189,8 @@ setMethod("group", signature(p = "MongoPipeline"),
 	})
 
 #' @export
-setGeneric("unwind", function(p, expr) standardGeneric("unwind"))
-setMethod("unwind", signature(p = "MongoPipeline"),
+setGeneric("munwind", function(p, expr) standardGeneric("munwind"))
+setMethod("munwind", signature(p = "MongoPipeline"),
 	function(p, expr)
 	{
 		parser <- exprParser()
@@ -200,8 +200,8 @@ setMethod("unwind", signature(p = "MongoPipeline"),
 	})
 
 #' @export
-setGeneric("sort", function(p, ...) standardGeneric("sort"))
-setMethod("sort", signature(p = "MongoPipeline"),
+setGeneric("msort", function(p, ...) standardGeneric("msort"))
+setMethod("msort", signature(p = "MongoPipeline"),
 	function(p, ...)
 	{
 		namedArgs <- lapply(list(...), jsonlite::unbox)
@@ -212,8 +212,8 @@ setMethod("sort", signature(p = "MongoPipeline"),
 
 # TODO: need to figure out how to dispatch specifically on a mongolite client
 #' @export
-setGeneric("execute", function(p, ...) standardGeneric("execute"))
-setMethod("execute", signature(p = "MongoPipeline"),
+setGeneric("mexecute", function(p, ...) standardGeneric("mexecute"))
+setMethod("mexecute", signature(p = "MongoPipeline"),
 	function(p, client)
 	{
 		pipeline <- paste0("[", toString(p@stages), "]")
