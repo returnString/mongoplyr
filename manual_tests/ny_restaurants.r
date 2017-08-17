@@ -29,3 +29,8 @@ MongoPipeline() %>%
 MongoPipeline() %>%
 	match(.borough == getNYBoroughByIndex(5)) %>%
 	execute(conn) -> restaurantsInBrooklynByIndex
+
+input <- list(cuisine = "Continental")
+MongoPipeline() %>%
+	match(.cuisine == input$cuisine) %>%
+	execute(conn) -> continentalCuisineFromInput

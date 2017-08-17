@@ -1,3 +1,13 @@
+mongoPrimitiveOps = c("&"
+	, "|"
+	, "=="
+	, "!="
+	, ">"
+	, ">="
+	, "<"
+	, "<="
+)
+
 exprParser <- function()
 {
 	callingFrame <- parent.frame(2)
@@ -29,10 +39,10 @@ exprParser <- function()
 			{
 				op <- visit(x[[1]])
 				opText <- deparse(x[[1]])
-				args <- lapply(x[2:length(x)], visit)
 
-				if (is.primitive(op$value) | startsWith(opText, "."))
+				if (opText %in% mongoPrimitiveOps | startsWith(opText, "."))
 				{
+					args <- lapply(x[2:length(x)], visit)
 					opText <- sub("^\\.", "", opText)
 					return(list(type = "call", op = opText, args = args))
 				}
@@ -41,7 +51,7 @@ exprParser <- function()
 					rargs <- list()
 					if (length(x) > 1)
 					{
-						rargs <- lapply(x[2:length(x)], function(i) eval(i, envir = callingFrame))
+						rargs <- as.list(x[2:length(x)])
 					}
 
 					result <- do.call(op$value, rargs)
