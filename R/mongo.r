@@ -24,11 +24,13 @@ exprParser <- function()
 			{
 				value = deparse(x)
 
+				# period prefix indicates a mongo field (some contexts require the $ prefix)
 				if (startsWith(value, "."))
 				{
 					value <- sub("^\\.", ifelse(dollarForMemberAccess, "$", ""), value)
 					return(list(type = "member", value = value))
 				}
+				# otherwise, it's an R object, so add that actual value to the ast
 				else
 				{
 					obj <- get(value, envir = callingFrame)
@@ -40,12 +42,16 @@ exprParser <- function()
 				op <- visit(x[[1]])
 				opText <- deparse(x[[1]])
 
+				# if it's a primitive op, or we're just proxying to a mongo expression,
+				# then create an ast node to render that out later
 				if (opText %in% mongoPrimitiveOps | startsWith(opText, "."))
 				{
 					args <- lapply(x[2:length(x)], visit)
 					opText <- sub("^\\.", "", opText)
 					return(list(type = "call", op = opText, args = args))
 				}
+				# otherwise, it's a proper R function call (and so contains no mongo field/func refs)
+				# so resolve the return value pre-query and sub that in as an atomic ast node
 				else
 				{
 					rargs <- list()
