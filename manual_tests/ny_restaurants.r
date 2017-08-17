@@ -48,3 +48,8 @@ MongoPipeline() %>%
 	munwind(.grades) %>%
 	msort(.grades.grade = 1, .grades.date = -1) %>%
 	mexecute(conn) -> restaurantRatingsSortedByGradeAndDate
+
+# queries support the %in% operator to test whether a variable is one of many options
+MongoPipeline() %>%
+	mmatch(.borough %in% c("Manhattan", "Staten Island")) %>%
+	mexecute(conn) -> restaurantsInManhattanOrStatenIsland

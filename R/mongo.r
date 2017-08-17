@@ -6,6 +6,7 @@ mongoPrimitiveOps = c("&"
 	, ">="
 	, "<"
 	, "<="
+	, "%in%"
 )
 
 exprParser <- function()
@@ -129,6 +130,7 @@ mongoAstToList <- function(ast)
 				"sum" = renderFunc,
 				"first" = renderFunc,
 				"list" = renderSubobject,
+				"%in%" = binaryExpr("in"),
 				stop(paste("unhandled operator:", node$op))
 			)
 
@@ -136,7 +138,14 @@ mongoAstToList <- function(ast)
 		}
 		else if (node$type == "atomic" || node$type == "member")
 		{
-			jsonlite::unbox(node$value)
+			if (is.vector(node$value))
+			{
+				node$value
+			}
+			else
+			{
+				jsonlite::unbox(node$value)
+			}
 		}
 		else
 		{
