@@ -62,7 +62,7 @@ exprParser <- function()
 						rargs <- as.list(x[2:length(x)])
 					}
 
-					result <- do.call(op$value, rargs)
+					result <- do.call(op$value, rargs, envir = callingFrame)
 					return(list(type = "atomic", value = result))
 				}
 			}
