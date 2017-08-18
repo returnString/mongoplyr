@@ -7,6 +7,7 @@ mongoPrimitiveOps = c("&"
 	, "<"
 	, "<="
 	, "%in%"
+	, "+"
 )
 
 exprParser <- function()
@@ -127,7 +128,11 @@ mongoAstToList <- function(ast)
 				">=" = binaryExpr("gte"),
 				"<" = binaryExpr("lt"),
 				"<=" = binaryExpr("lte"),
+				"+" = arrayExpr("add"),
+				"substr" = arrayExpr("substr"),
 				"sum" = renderFunc,
+				"min" = renderFunc,
+				"max" = renderFunc,
 				"first" = renderFunc,
 				"list" = renderSubobject,
 				"%in%" = binaryExpr("in"),
@@ -138,14 +143,7 @@ mongoAstToList <- function(ast)
 		}
 		else if (node$type == "atomic" || node$type == "member")
 		{
-			if (is.vector(node$value))
-			{
-				node$value
-			}
-			else
-			{
-				jsonlite::unbox(node$value)
-			}
+			node$value
 		}
 		else
 		{
@@ -160,7 +158,7 @@ createStage <- function(name, payload)
 {
 	ret <- list()
 	ret[[paste0("$", name)]] <- payload
-	jsonlite::toJSON(ret)
+	jsonlite::toJSON(ret, auto_unbox = T)
 }
 
 #' @export MongoPipeline
