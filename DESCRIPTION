@@ -10,3 +10,4 @@ LazyData: true
 Imports: jsonlite
 Depends: magrittr, mongolite
 RoxygenNote: 6.0.1
+Suggests: testthat
