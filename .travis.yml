@@ -1,0 +1,5 @@
+language: R
+r:
+  - "3.3"
+sudo: false
+cache: packages
