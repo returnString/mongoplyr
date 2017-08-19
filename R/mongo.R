@@ -120,22 +120,26 @@ mongoAstToList <- function(ast)
 		if (node$type == "call")
 		{
 			func <- switch(node$op,
-				"&" = arrayExpr("and"),
-				"|" = arrayExpr("or"),
-				"==" = binaryExpr("eq"),
-				"!=" = binaryExpr("ne"),
-				">" = binaryExpr("gt"),
-				">=" = binaryExpr("gte"),
-				"<" = binaryExpr("lt"),
-				"<=" = binaryExpr("lte"),
-				"+" = arrayExpr("add"),
-				"substr" = arrayExpr("substr"),
-				"sum" = renderFunc,
-				"min" = renderFunc,
-				"max" = renderFunc,
-				"first" = renderFunc,
-				"list" = renderSubobject,
-				"%in%" = binaryExpr("in"),
+
+				# expressions
+				"&" = { arrayExpr("and") },
+				"|" = { arrayExpr("or") },
+				"==" = { binaryExpr("eq") },
+				"!=" = { binaryExpr("ne") },
+				">" = { binaryExpr("gt") },
+				">=" = { binaryExpr("gte") },
+				"<" = { binaryExpr("lt") },
+				"<=" = { binaryExpr("lte") },
+				"+" = { arrayExpr("add") },
+				"substr" = { arrayExpr("substr") },
+
+				# accumulators
+				"sum" = { renderFunc },
+				"min" = { renderFunc },
+				"max" = { renderFunc },
+				"first" = { renderFunc },
+				"list" = { renderSubobject },
+
 				stop(paste("unhandled operator:", node$op))
 			)
 
