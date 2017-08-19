@@ -131,6 +131,7 @@ mongoAstToList <- function(ast)
 				"<" = { binaryExpr("lt") },
 				"<=" = { binaryExpr("lte") },
 				"+" = { arrayExpr("add") },
+				"%in%" = { binaryExpr("in") },
 				"substr" = { arrayExpr("substr") },
 
 				# accumulators
