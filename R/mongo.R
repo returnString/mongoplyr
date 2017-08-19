@@ -68,7 +68,7 @@ exprParser <- function()
 			}
 			else
 			{
-				stop(paste0("unhandled type: ", typeof(x)))
+				stop(paste0("unhandled type: ", typeof(x))) # nocov
 			}
 		}
 
@@ -147,7 +147,7 @@ mongoAstToList <- function(ast)
 		}
 		else
 		{
-			stop(paste("unhandled type:", node$type))
+			stop(paste("unhandled type:", node$type)) # nocov
 		}
 	}
 
