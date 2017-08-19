@@ -161,11 +161,20 @@ createStage <- function(name, payload)
 	jsonlite::toJSON(ret, auto_unbox = T)
 }
 
+#' Represents a MongoDB aggregation pipeline query.
 #' @export MongoPipeline
 MongoPipeline <- setClass("MongoPipeline", slots = c(stages = "character"))
 
+#' Add a $match stage to a MongoPipeline.
+#' @param p A \linkS4class{MongoPipeline} instance.
+#' @param expr An expression indicating the requirements to match against.
+#' @return A copy of the previous pipeline, with the new stage added.
+#' @rdname mmatch-methods
 #' @export
 setGeneric("mmatch", function(p, expr) standardGeneric("mmatch"))
+
+#' @rdname mmatch-methods
+#' @aliases mmatch,MongoPipeline-method
 setMethod("mmatch", signature(p = "MongoPipeline"),
 	function(p, expr)
 	{
@@ -176,8 +185,16 @@ setMethod("mmatch", signature(p = "MongoPipeline"),
 		p
 	})
 
+#' Add a $limit stage to a MongoPipeline.
+#' @param p A \linkS4class{MongoPipeline} instance.
+#' @param limit The number of documents to include in the result.
+#' @return A copy of the previous pipeline, with the new stage added.
+#' @rdname mlimit-methods
 #' @export
 setGeneric("mlimit", function(p, limit) standardGeneric("mlimit"))
+
+#' @rdname mlimit-methods
+#' @aliases mlimit,MongoPipeline,numeric-method
 setMethod("mlimit", signature(p = "MongoPipeline", limit = "numeric"),
 	function(p, limit)
 	{
@@ -185,8 +202,18 @@ setMethod("mlimit", signature(p = "MongoPipeline", limit = "numeric"),
 		p
 	})
 
+#' Add a $group stage to a MongoPipeline.
+#' @param p A \linkS4class{MongoPipeline} instance.
+#' @param by The grouping variable(s), as an expression.
+#' @param ... Zero or more name=value pairs where name represent
+#' a field to create, and values are accumulator expressions.
+#' @return A copy of the previous pipeline, with the new stage added.
+#' @rdname mgroup-methods
 #' @export
 setGeneric("mgroup", function(p, by, ...) standardGeneric("mgroup"))
+
+#' @rdname mgroup-methods
+#' @aliases mgroup,MongoPipeline-method
 setMethod("mgroup", signature(p = "MongoPipeline"),
 	function(p, by, ...)
 	{
@@ -201,8 +228,16 @@ setMethod("mgroup", signature(p = "MongoPipeline"),
 		p
 	})
 
+#' Add an $unwind stage to a MongoPipeline.
+#' @param p A \linkS4class{MongoPipeline} instance.
+#' @param expr An expression indicating the array field to unwind.
+#' @return A copy of the previous pipeline, with the new stage added.
+#' @rdname munwind-methods
 #' @export
 setGeneric("munwind", function(p, expr) standardGeneric("munwind"))
+
+#' @rdname munwind-methods
+#' @aliases munwind,MongoPipeline-method
 setMethod("munwind", signature(p = "MongoPipeline"),
 	function(p, expr)
 	{
@@ -212,8 +247,16 @@ setMethod("munwind", signature(p = "MongoPipeline"),
 		p
 	})
 
+#' Add a $sort stage to a MongoPipeline.
+#' @param p A \linkS4class{MongoPipeline} instance.
+#' @param ... Named arguments for sort fields, indicating whether to sort in ascending (1) or descending (-1) order.
+#' @return A copy of the previous pipeline, with the new stage added.
+#' @rdname msort-methods
 #' @export
 setGeneric("msort", function(p, ...) standardGeneric("msort"))
+
+#' @rdname msort-methods
+#' @aliases msort,MongoPipeline-method
 setMethod("msort", signature(p = "MongoPipeline"),
 	function(p, ...)
 	{
@@ -223,14 +266,22 @@ setMethod("msort", signature(p = "MongoPipeline"),
 		p
 	})
 
-# TODO: need to figure out how to dispatch specifically on a mongolite client
+#' Execute a MongoPipeline's current query.
+#' @param p A \linkS4class{MongoPipeline} instance.
+#' @param client A connection to the mongo collection to execute against.
+#' @return A data frame containing the aggregation pipeline results.
+#' @rdname mexecute-methods
 #' @export
-setGeneric("mexecute", function(p, ...) standardGeneric("mexecute"))
+setGeneric("mexecute", function(p, client) standardGeneric("mexecute"))
+
+#' @rdname mexecute-methods
+#' @aliases mexecute,MongoPipeline-method
 setMethod("mexecute", signature(p = "MongoPipeline"),
 	function(p, client)
 	{
 		pipeline <- paste0("[", toString(p@stages), "]")
-		flattenedFrame <- jsonlite::flatten(client$aggregate(pipeline))
+		frame <- client$aggregate(pipeline)
+		flattenedFrame <- jsonlite::flatten(frame)
 		colnames(flattenedFrame) <- gsub("^_id", "id", colnames(flattenedFrame))
 		flattenedFrame
 	})
