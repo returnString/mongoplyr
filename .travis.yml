@@ -8,5 +8,11 @@ warnings_are_errors: false
 r_packages:
   - covr
 
+services:
+  - mongodb
+
+before_script:
+  - bash tests/download_datasets
+
 after_success:
   - Rscript -e 'covr::coveralls()'

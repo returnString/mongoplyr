@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+curl https://raw.githubusercontent.com/mongodb/docs-assets/d35c36f18feb7acb7b24c015350871ff801c4950/primer-dataset.json | mongoimport --drop --db mongoplyr_tests --collection restaurants
