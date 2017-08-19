@@ -12,6 +12,18 @@ test_that("multiple-field equality matches use $and/$eq",
 		pipelineAssert('{"$match":{"$and":[{"field1":{"$eq":"value"}},{"field2":{"$eq":1}}]}}')
 })
 
+test_that("or maps to $or/$eq",
+{
+	MongoPipeline() %>% mmatch(.field1 == "value" | .field2 == 1) %>%
+		pipelineAssert('{"$match":{"$or":[{"field1":{"$eq":"value"}},{"field2":{"$eq":1}}]}}')
+})
+
+test_that("!= maps to $ne",
+{
+	MongoPipeline() %>% mmatch(.field != "value to exclude") %>%
+		pipelineAssert('{"$match":{"field":{"$ne":"value to exclude"}}}')
+})
+
 test_that("numeric operators use $gl(e)/$lt(e)",
 {
 	MongoPipeline() %>% mmatch(.timestamp > 100 & .timestamp < 1000) %>%
