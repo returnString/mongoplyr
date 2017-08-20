@@ -1,3 +1,8 @@
+#' @import methods
+#' @import magrittr
+#' @import mongolite
+NULL
+
 mongoPrimitiveOps = c("&"
 	, "|"
 	, "=="

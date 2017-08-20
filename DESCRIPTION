@@ -4,11 +4,11 @@ Title: MongoDB Aggregation Pipeline for R
 Version: 0.1.0
 Author: Ruan Pearce-Authers <ruanpa@outlook.com>
 Maintainer: Ruan Pearce-Authers <ruanpa@outlook.com>
-Description: //TODO
+Description: A native R interface to the MongoDB aggregation pipeline.
 License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true
 Imports: jsonlite
-Depends: magrittr, mongolite
+Depends: methods, magrittr, mongolite
 RoxygenNote: 6.0.1
 Suggests: testthat
