@@ -40,3 +40,11 @@ test_that("grouping with mathematical expressions in accumulators",
 		) %>%
 		pipelineAssert('{"$group":{"addField":{"$add":["$a","$b"]},"subField":{"$subtract":["$a","$b"]},"divField":{"$divide":["$a","$b"]},"mulField":{"$multiply":["$a","$b"]},"_id":"$groupingVar"}}')
 })
+
+test_that("grouping with $substr function in accumulators",
+{
+	MongoPipeline() %>% mgroup(by = .groupingVar,
+			newStringField = .substr(.numericField, 0, -1)
+		) %>%
+		pipelineAssert('{"$group":{"newStringField":{"$substr":["$numericField",0,-1]},"_id":"$groupingVar"}}')
+})

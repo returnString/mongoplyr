@@ -150,7 +150,7 @@ mongoAstToList <- function(ast)
 				"*" = { arrayExpr("multiply") },
 				"/" = { arrayExpr("divide", 2) },
 				"%in%" = { binaryExpr("in") },
-				"substr" = { arrayExpr("substr") },
+				"substr" = { arrayExpr("substr", 3) },
 
 				# accumulators
 				"sum" = { renderFunc },
