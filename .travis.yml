@@ -1,9 +1,11 @@
 language: R
 r:
+  - "3.4"
   - "3.3"
+
 sudo: false
 cache: packages
-warnings_are_errors: false
+warnings_are_errors: true
 
 r_packages:
   - covr
