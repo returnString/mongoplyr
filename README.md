@@ -43,6 +43,10 @@ devtools::install_github("returnString/mongoplyr")
 
 The package is not yet available on CRAN, as there are still notes and warnings when building. This is a priority to fix, but should not impact package usage via GitHub.
 
+Currently supported and tested R versions:
+- 3.3.x
+- 3.4.x
+
 # Production usage
 This package is currently in use at Deep Silver Dambuster Studios, primarily inside of Shiny dashboards for internal cluster telemetry, where we extract and prepare data for further analysis and presentation. This has caused a 99% reduction in our usage of `paste0` ;)
 
