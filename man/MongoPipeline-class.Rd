@@ -8,3 +8,9 @@
 \description{
 Represents a MongoDB aggregation pipeline query.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{stages}}{Character vector containing the current pipeline stages, serialised as JSON.}
+}}
+

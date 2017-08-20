@@ -190,6 +190,7 @@ createStage <- function(name, payload)
 }
 
 #' Represents a MongoDB aggregation pipeline query.
+#' @slot stages Character vector containing the current pipeline stages, serialised as JSON.
 #' @export MongoPipeline
 MongoPipeline <- setClass("MongoPipeline", slots = c(stages = "character"))
 
