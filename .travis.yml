@@ -19,6 +19,7 @@ services:
   - mongodb
 
 before_script:
+  - bash tests/ci_env_setup
   - bash tests/download_datasets
 
 after_success:
