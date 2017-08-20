@@ -37,15 +37,19 @@ Should result in a data frame like so:
 ```
 
 # Installation
+The package is not yet available on CRAN. However, it can be installed directly from source with the `devtools` package:
+
 ```r
 devtools::install_github("returnString/mongoplyr")
 ```
 
-The package is not yet available on CRAN, as there are still notes and warnings when building. This is a priority to fix, but should not impact package usage via GitHub.
-
 Currently supported and tested R versions:
-- 3.3.x
 - 3.4.x
+- 3.3.x
+
+This package is also built and tested against the latest development build of R.
+
+With regards to platforms, we officially test all changes on Linux with Travis CI, and most development currently occurs on Windows. I aim to implement automated testing on Windows and OSX to expand this.
 
 # Production usage
 This package is currently in use at Deep Silver Dambuster Studios, primarily inside of Shiny dashboards for internal cluster telemetry, where we extract and prepare data for further analysis and presentation. This has caused a 99% reduction in our usage of `paste0` ;)
