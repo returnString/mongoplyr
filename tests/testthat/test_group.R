@@ -29,3 +29,14 @@ test_that("grouping with $first accumulator",
 	MongoPipeline() %>% mgroup(by = .groupingVar, firstFieldSpotted = .first(.field)) %>%
 		pipelineAssert('{"$group":{"firstFieldSpotted":{"$first":"$field"},"_id":"$groupingVar"}}')
 })
+
+test_that("grouping with mathematical expressions in accumulators",
+{
+	MongoPipeline() %>% mgroup(by = .groupingVar,
+			addField = .a + .b,
+			subField = .a - .b,
+			divField = .a / .b,
+			mulField = .a * .b
+		) %>%
+		pipelineAssert('{"$group":{"addField":{"$add":["$a","$b"]},"subField":{"$subtract":["$a","$b"]},"divField":{"$divide":["$a","$b"]},"mulField":{"$multiply":["$a","$b"]},"_id":"$groupingVar"}}')
+})

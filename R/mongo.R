@@ -8,6 +8,9 @@ mongoPrimitiveOps = c("&"
 	, "<="
 	, "%in%"
 	, "+"
+	, "-"
+	, "/"
+	, "*"
 )
 
 exprParser <- function()
@@ -43,10 +46,15 @@ exprParser <- function()
 			{
 				op <- visit(x[[1]])
 				opText <- deparse(x[[1]])
+				argCount <- length(x) - 1
+
+				# make an exception for negated literals - they're actually calls in R
+				# resolve them ahead of time instead of shelling out to an invalid $subtract call
+				isPrimitiveException <- opText == "-" & argCount == 1 & is.numeric(x[[2]])
 
 				# if it's a primitive op, or we're just proxying to a mongo expression,
 				# then create an ast node to render that out later
-				if (opText %in% mongoPrimitiveOps | startsWith(opText, "."))
+				if (!isPrimitiveException & (opText %in% mongoPrimitiveOps | startsWith(opText, ".")))
 				{
 					args <- lapply(x[2:length(x)], visit)
 					opText <- sub("^\\.", "", opText)
@@ -57,7 +65,7 @@ exprParser <- function()
 				else
 				{
 					rargs <- list()
-					if (length(x) > 1)
+					if (argCount > 0)
 					{
 						rargs <- as.list(x[2:length(x)])
 					}
@@ -81,12 +89,19 @@ mongoAstToList <- function(ast)
 {
 	visit <- function(node)
 	{
-		arrayExpr <- function(name)
+		arrayExpr <- function(name, requiredArity = NA)
 		{
 			function(node)
 			{
 				ret <- list()
-				ret[[paste0("$", name)]] <- lapply(node$args, visit)
+				args <- lapply(node$args, visit)
+
+				if (!is.na(requiredArity) & length(args) != requiredArity)
+				{
+					stop(paste("Expected", requiredArity, "args for", name, "operator, got", length(args))) # nocov
+				}
+
+				ret[[paste0("$", name)]] <- args
 				ret
 			}
 		}
@@ -131,6 +146,9 @@ mongoAstToList <- function(ast)
 				"<" = { binaryExpr("lt") },
 				"<=" = { binaryExpr("lte") },
 				"+" = { arrayExpr("add") },
+				"-" = { arrayExpr("subtract", 2) },
+				"*" = { arrayExpr("multiply") },
+				"/" = { arrayExpr("divide", 2) },
 				"%in%" = { binaryExpr("in") },
 				"substr" = { arrayExpr("substr") },
 
