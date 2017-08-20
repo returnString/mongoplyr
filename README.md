@@ -1,6 +1,7 @@
 # mongoplyr
 
 [![Travis-CI Build Status](https://travis-ci.org/returnString/mongoplyr.svg?branch=master)](https://travis-ci.org/returnString/mongoplyr)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/returnString/mongoplyr?branch=master&svg=true)](https://ci.appveyor.com/project/returnString/mongoplyr)
 [![Coverage Status](https://coveralls.io/repos/github/returnString/mongoplyr/badge.svg?branch=master)](https://coveralls.io/github/returnString/mongoplyr?branch=master)
 
 A native R interface to the MongoDB aggregation pipeline.
