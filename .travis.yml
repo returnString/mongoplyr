@@ -1,5 +1,6 @@
 language: R
 r:
+  - devel
   - "3.4"
   - "3.3"
 
