@@ -11,4 +11,7 @@ if [[ $TRAVIS_OS_NAME = 'osx' ]]; then
 	sudo mkdir -p /data/db
 	echo "Starting mongodb"
 	brew services start mongodb
+	
+	echo "Waiting for mongodb"
+	sleep 15
 fi
