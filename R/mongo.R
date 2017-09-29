@@ -111,12 +111,19 @@ mongoAstToList <- function(ast)
 			}
 		}
 
-		binaryExpr <- function(name)
+		binaryExpr <- function(name, requiresArray = F)
 		{
 			function(node)
 			{
 				argList <- list()
-				argList[[paste0("$", name)]] <- visit(node$args[[2]])
+				rhs <- visit(node$args[[2]])
+
+				if (requiresArray & length(rhs) == 1)
+				{
+					rhs <- list(rhs)
+				}
+
+				argList[[paste0("$", name)]] <- rhs
 
 				ret <- list()
 				field <- visit(node$args[[1]])
@@ -154,7 +161,7 @@ mongoAstToList <- function(ast)
 				"-" = { arrayExpr("subtract", 2) },
 				"*" = { arrayExpr("multiply") },
 				"/" = { arrayExpr("divide", 2) },
-				"%in%" = { binaryExpr("in") },
+				"%in%" = { binaryExpr("in", T) },
 				"substr" = { arrayExpr("substr", 3) },
 
 				# accumulators

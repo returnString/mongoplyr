@@ -37,4 +37,7 @@ test_that("R's %in% operator is mapped to $in",
 {
 	MongoPipeline() %>% mmatch(.field %in% c("one option", "another option")) %>%
 		pipelineAssert('{"$match":{"field":{"$in":["one option","another option"]}}}')
+
+	MongoPipeline() %>% mmatch(.field %in% c("one option")) %>%
+		pipelineAssert('{"$match":{"field":{"$in":["one option"]}}}')
 })
